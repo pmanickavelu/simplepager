@@ -24,30 +24,23 @@
 		v1.1/		18/09/09 * bug fix by John V - http://blog.geekyjohn.com/
 -------------------------------------------------*/
 
+/*-------------------------------------------------
+	Prabhu Manickavelus Jquery update Simple Paginator
+-------------------------------------------------*/
 (function($) {
-	    
 	$.fn.quickPager = function(options) {
-	
 		var defaults = {
 			pageSize: 10,
 			currentPage: 1,
 			holder: null,
 			pagerLocation: "after"
 		};
-		
 		var options = $.extend(defaults, options);
-		
-		
 		return this.each(function() {
-	
-						
 			var selector = $(this);	
 			var pageCounter = 1;
-			
 			selector.wrap("<div class='simplePagerContainer'></div>");
-			
 			selector.children().each(function(i){ 
-					
 				if(i < pageCounter*options.pageSize && i >= (pageCounter-1)*options.pageSize) {
 				$(this).addClass("simplePagerPage"+pageCounter);
 				}
@@ -57,27 +50,33 @@
 				}	
 				
 			});
-			
-			// show/hide the appropriate regions 
 			selector.children().hide();
 			selector.children(".simplePagerPage"+options.currentPage).show();
-			
 			if(pageCounter <= 1) {
 				return;
 			}
-			
-			//Build pager navigation
 			var pageNav = "<ul class='simplePagerNav'>";	
 			for (i=1;i<=pageCounter;i++){
+				/*added for Previous link start*/
+				if(i==1)
+				{
+					pageNav += "<li class='simplePageNav'><a rel='prv' href='#'>&lt;Previous</a></li>";	
+				}
+				/*added for Previous link end*/
 				if (i==options.currentPage) {
 					pageNav += "<li class='currentPage simplePageNav"+i+"'><a rel='"+i+"' href='#'>"+i+"</a></li>";	
 				}
 				else {
 					pageNav += "<li class='simplePageNav"+i+"'><a rel='"+i+"' href='#'>"+i+"</a></li>";
 				}
+				/*added for next link start*/
+				if(i!=1 && i==pageCounter)
+				{
+					pageNav += "<li class='simplePageNav'><a rel='nxt' href='#'>Next&gt;</a></li>";
+				}
+				/*added for next link end*/
 			}
-			pageNav += "</ul>";
-			
+			pageNav += "</ul><input type='hidden' id='crnt' value='1'><input type='hidden' id='maxpag' value='"+ pageCounter +"'>";
 			if(!options.holder) {
 				switch(options.pagerLocation)
 				{
@@ -95,34 +94,67 @@
 			else {
 				$(options.holder).append(pageNav);
 			}
-			
-			//pager navigation behaviour
 			selector.parent().find(".simplePagerNav a").click(function() {
-					
-				//grab the REL attribute 
+				/*rewrote the whole select logig to include previous and next link start*/
 				var clickedLink = $(this).attr("rel");
+				var crnt=document.getElementById("crnt");
+				var maxpag=document.getElementById("maxpag");
 				options.currentPage = clickedLink;
-				
-				if(options.holder) {
-					$(this).parent("li").parent("ul").parent(options.holder).find("li.currentPage").removeClass("currentPage");
-					$(this).parent("li").parent("ul").parent(options.holder).find("a[rel='"+clickedLink+"']").parent("li").addClass("currentPage");
+				if(!((clickedLink=='prv' && crnt.value==1)||(clickedLink=='nxt' && crnt.value==maxpag.value)))
+				{
+					if(options.holder) {
+						$(this).parent("li").parent("ul").parent(options.holder).find("li.currentPage").removeClass("currentPage");
+						if(options.currentPage=='prv')
+						{
+							crnt.value-=1;
+							clickedLink=crnt.value;
+							$(this).parent("li").parent("ul").parent(options.holder).find("a[rel='"+crnt.value+"']").parent("li").addClass("currentPage");
+						}
+						else if(options.currentPage=='nxt')
+						{
+							crnt.value=(crnt.value*1)+1;
+							clickedLink=crnt.value;
+							$(this).parent("li").parent("ul").parent(options.holder).find("a[rel='"+crnt.value+"']").parent("li").addClass("currentPage");
+						}
+						else
+						{
+							crnt.value=clickedLink;
+							$(this).parent("li").parent("ul").parent(options.holder).find("a[rel='"+clickedLink+"']").parent("li").addClass("currentPage");
+						}
+					}
+					else {
+						$(this).parent("li").parent("ul").parent(".simplePagerContainer").find("li.currentPage").removeClass("currentPage");
+						if(options.currentPage=='prv')
+						{
+							crnt.value-=1;
+							clickedLink=crnt.value;
+							$(this).parent("li").parent("ul").parent(".simplePagerContainer").find("a[rel='"+crnt.value+"']").parent("li").addClass("currentPage");
+						}
+						else if(options.currentPage=='nxt')
+						{
+							crnt.value=(crnt.value*1)+1;
+							clickedLink=crnt.value;
+							$(this).parent("li").parent("ul").parent(".simplePagerContainer").find("a[rel='"+crnt.value+"']").parent("li").addClass("currentPage")
+						}
+						else
+						{
+							crnt.value=clickedLink;
+							$(this).parent("li").parent("ul").parent(".simplePagerContainer").find("a[rel='"+clickedLink+"']").parent("li").addClass("currentPage");
+						}
+					}
+					selector.children().hide();			
+					selector.find(".simplePagerPage"+clickedLink).show();
 				}
-				else {
-					//remove current current (!) page
-					$(this).parent("li").parent("ul").parent(".simplePagerContainer").find("li.currentPage").removeClass("currentPage");
-					//Add current page highlighting
-					$(this).parent("li").parent("ul").parent(".simplePagerContainer").find("a[rel='"+clickedLink+"']").parent("li").addClass("currentPage");
-				}
-				
-				//hide and show relevant links
-				selector.children().hide();			
-				selector.find(".simplePagerPage"+clickedLink).show();
-				
+				/*rewrote the whole select logig to include previous and next link end*/
 				return false;
 			});
 		});
 	}
-	
-
 })(jQuery);
 
+/*-------------------------------------------------
+	Prabhu Manickavelus Jquery Simple Paginator
+	Prabhu.Manickavelu@Gmail.Com
+	Prabu.Manickavelu@Gmail.Com
+	+91-9962032386
+-------------------------------------------------*/
