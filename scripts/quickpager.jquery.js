@@ -26,6 +26,11 @@
 
 /*-------------------------------------------------
 	Prabhu Manickavelus Jquery update Simple Paginator
+	
+	Added support for previous and next link
+	
+	Prabhu . Manickavelu @ Gmail . Com
+	Prabu . Manickavelu @ Gmail . Com
 -------------------------------------------------*/
 (function($) {
 	$.fn.quickPager = function(options) {
@@ -152,9 +157,3 @@
 	}
 })(jQuery);
 
-/*-------------------------------------------------
-	Prabhu Manickavelus Jquery Simple Paginator
-	Prabhu.Manickavelu@Gmail.Com
-	Prabu.Manickavelu@Gmail.Com
-	+91-9962032386
--------------------------------------------------*/
